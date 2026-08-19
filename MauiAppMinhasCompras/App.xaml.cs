@@ -2,6 +2,7 @@
 
 namespace MauiAppMinhasCompras
 {
+    // Aqui estamos abrindo a "fábrica principal" do nosso aplicativo móvel.
     public partial class App : Application
     {
         public App()
