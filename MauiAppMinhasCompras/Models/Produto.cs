@@ -1,5 +1,4 @@
 ﻿using SQLite;
-using System.Diagnostics;
 namespace MauiAppMinhasCompras.Models
 {
     public class Produto
