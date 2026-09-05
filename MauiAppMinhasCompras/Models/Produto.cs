@@ -4,6 +4,7 @@ namespace MauiAppMinhasCompras.Models
 {
     public class Produto
     {
+
         //Variaveis privadas para validação
         string _descricao = string.Empty;
         double _quantidade;
@@ -13,19 +14,19 @@ namespace MauiAppMinhasCompras.Models
         public int Id { get; set; }
         public string Descricao
         {
-            get => _descricao;
+            get;
             set
             {
                 //Validação para não permitir que a descrição seja vazia
-                if (string.IsNullOrWhiteSpace(value))
+                if (value == null)
                 {
                     //Lançando uma exceção caso a descrição seja vazia
                     throw new Exception("Por favor, preencha a descrição");
                 }
                 //Atribuindo o valor à variável privada
-                _descricao = value;
+                field = value;
             }
-        }
+        } = string.Empty;
 
         public double Quantidade
         {

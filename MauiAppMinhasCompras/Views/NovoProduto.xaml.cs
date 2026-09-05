@@ -12,7 +12,7 @@ public partial class NovoProduto : ContentPage
     // Ação do botão de salvar na Toolbar
     private async void ToolbarItem_Clicked(object? sender, EventArgs e)
     {
-        // 1. Validação dos campos de entrada
+        // Validação dos campos de entrada. Se houver algum campo vazio, exibe um alerta e retorna sem prosseguir.
         if (string.IsNullOrWhiteSpace(txt_descricao.Text))
         {
             await DisplayAlertAsync("Ops", "Informe a descrição do produto", "OK");
@@ -33,7 +33,8 @@ public partial class NovoProduto : ContentPage
 
         try
         {
-            // Instanciação do modelo com os dados inseridos
+            // Instanciação do modelo com os dados inseridos.
+            // Capturando a descrição, quantidade e preço do produto a partir dos campos de entrada.
             Produto p = new Produto
             {
                 Descricao = txt_descricao.Text,

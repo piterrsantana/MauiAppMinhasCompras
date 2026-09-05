@@ -21,6 +21,7 @@ public partial class ListaProduto : ContentPage
     {
         try
         {
+            // Limpa a lista observável antes de recarregar os dados
             lista.Clear();
 
             // Busca todos os produtos salvos no banco de dados
@@ -53,14 +54,14 @@ public partial class ListaProduto : ContentPage
     private async void txt_search_TextChanged(object? sender, TextChangedEventArgs e)
     {
         try
-        {
+        {   // Obtém o texto digitado na barra de pesquisa
             string q = e.NewTextValue;
-
+            // Limpa a lista observável antes de exibir os resultados da busca
             lista.Clear();
 
             // Realiza a busca filtrada no banco de dados
             List<Produto> tmp = await App.Db.Search(q);
-
+            // Adiciona cada produto encontrado na lista observável
             tmp.ForEach(i => lista.Add(i));
         }
         catch (Exception ex)
@@ -91,14 +92,17 @@ public partial class ListaProduto : ContentPage
     private async void MenuItem_Clicked(object? sender, EventArgs e)
     {
         try
-        {
+        {   // Obtém o item de menu que foi clicado. É declarado nulo para evitar erros caso o sender não seja do tipo MenuItem.
             MenuItem? selecionado = sender as MenuItem;
 
+            // Verifica se o item de menu é nulo. Se for, retorna imediatamente para a tela de lista.
             if (selecionado == null)
                 return;
 
+            //Busca o produto associado ao que foi clicado, com o BindingContext/MenuItem.
+            //Se não tem produto associado, retorna para a tela de lista.
             Produto? p = selecionado.BindingContext as Produto;
-
+             
             if (p == null)
                 return;
 
@@ -122,12 +126,12 @@ public partial class ListaProduto : ContentPage
     private async void lst_produtos_ItemSelected(object? sender, SelectedItemChangedEventArgs e)
     {
         try
-        {
+        {   
             if (e.SelectedItem == null)
                 return;
-
+            // Obtém o produto selecionado na lista
             Produto? p = e.SelectedItem as Produto;
-
+                        
             if (p == null)
                 return;
 

@@ -10,8 +10,10 @@
         <ToolbarItem Text="Adicionar"
                      Clicked="ToolbarItem_Clicked" />
     </ContentPage.ToolbarItems>
-
-    <VerticalStackLayout>
+	
+    
+    <!-- Barra de pesquisa com Evento a disparar. Também uma dica para o usuário -->
+    <VerticalStackLayout Padding ="15" Spacing="15" >
         <SearchBar x:Name="txt_search"
                    Placeholder="Busca de Produtos"
                    TextChanged="txt_search_TextChanged" />
@@ -21,8 +23,8 @@
         <!--ItemSelected dispara um evento quando um item é selecionado ou clicado-->
         <ListView x:Name="lst_produtos"
                   ItemSelected="lst_produtos_ItemSelected">
-            <ListView.Header>
-                <Grid ColumnDefinitions="*, *, *, *, *">
+            <ListView.Header >
+                <Grid ColumnDefinitions="*, *, *, *, *" Padding="5, 10">
                     <Label Grid.Column="0"
                            Text="ID" />
                     <Label Grid.Column="1"
@@ -43,17 +45,17 @@
                             <MenuItem Text="Remover"
                                       Clicked="MenuItem_Clicked" />
                         </ViewCell.ContextActions>
-                        <Grid ColumnDefinitions="*, *, *, *, *">
+                        <Grid ColumnDefinitions="*, *, *, *, *" Padding="5, 10">
                             <Label Grid.Column="0"
                                    Text="{Binding Id}" />
                             <Label Grid.Column="1"
                                    Text="{Binding Descricao}" />
                             <Label Grid.Column="2"
-                                   Text="{Binding Preco}" />
+                                   Text="{Binding Preco, StringFormat='{0:C}'}" />
                             <Label Grid.Column="3"
                                    Text="{Binding Quantidade}" />
                             <Label Grid.Column="4"
-                                   Text="{Binding Total}" />
+                                   Text="{Binding Total, StringFormat='{0:C}'}" />
                         </Grid>
                     </ViewCell>
                 </DataTemplate>

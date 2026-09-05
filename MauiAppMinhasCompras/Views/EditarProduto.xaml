@@ -22,14 +22,14 @@
         <!--Definição de entrada para a quantidade do produto-->
         <Entry x:Name="txt_quantidade"
                Placeholder="Digite a quantidade"
-               Text="{Binding Quantidade}"
+               Text="{Binding Quantidade, Mode=OneTime}"
                Keyboard="Numeric" />
 
         <Label Text="Preço Unitário:" />
         <!--Definição de entrada para o preço unitário do produto-->
         <Entry x:Name="txt_preco"
                Placeholder="Digite o preço unitário"
-               Text="{Binding Preco}"
+               Text="{Binding Preco, Mode=OneTime}"
                Keyboard="Numeric" />
     </VerticalStackLayout>
 </ContentPage>

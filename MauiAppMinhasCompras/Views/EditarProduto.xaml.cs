@@ -11,6 +11,23 @@ public partial class EditarProduto : ContentPage
 
     private async void ToolbarItem_Clicked(object? sender, EventArgs e)
     {
+        if(string.IsNullOrWhiteSpace(txt_descricao.Text))
+        {
+            await DisplayAlertAsync("Ops", "Informe a descrição do produto", "OK");
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(txt_quantidade.Text))
+        {
+            await DisplayAlertAsync("Ops", "Informe a quantidade do produto", "OK");
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(txt_preco.Text))
+        {
+            await DisplayAlertAsync("Ops", "Informe o preço do produto", "OK");
+            return;
+        }
         try
         {
             // Tenta obter o produto anexado ao BindingContext da página
