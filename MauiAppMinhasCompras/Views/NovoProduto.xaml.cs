@@ -9,19 +9,43 @@ public partial class NovoProduto : ContentPage
         InitializeComponent();
     }
 
-    private async void ToolbarItem_Clicked(object sender, EventArgs e)
+    // Ação do botão de salvar na Toolbar
+    private async void ToolbarItem_Clicked(object? sender, EventArgs e)
     {
+        // 1. Validação dos campos de entrada
+        if (string.IsNullOrWhiteSpace(txt_descricao.Text))
+        {
+            await DisplayAlertAsync("Ops", "Informe a descrição do produto", "OK");
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(txt_quantidade.Text))
+        {
+            await DisplayAlertAsync("Ops", "Informe a quantidade do produto", "OK");
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(txt_preco.Text))
+        {
+            await DisplayAlertAsync("Ops", "Informe o preço do produto", "OK");
+            return;
+        }
+
         try
         {
-            Produto p = new Produto //Criando as colunas para receber os valores 
+            // Instanciação do modelo com os dados inseridos
+            Produto p = new Produto
             {
                 Descricao = txt_descricao.Text,
                 Quantidade = Convert.ToDouble(txt_quantidade.Text),
                 Preco = Convert.ToDouble(txt_preco.Text)
             };
 
+            // Persistência no banco SQLite
             await App.Db.Insert(p);
-            await DisplayAlertAsync("Sucesso", "Registro realizado", "OK");
+
+            // Feedback ao usuário e navegação de retorno
+            await DisplayAlertAsync("Sucesso!", "Produto Adicionado", "OK");
             await Navigation.PopAsync();
         }
         catch (Exception ex)

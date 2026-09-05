@@ -5,33 +5,111 @@ namespace MauiAppMinhasCompras.Views;
 
 public partial class ListaProduto : ContentPage
 {
-    ObservableCollection<Produto> lista = new ObservableCollection<Produto>(); //reage na interface automaticamente. Mostra tudo que tem na lista se nada for digitado
+    // Lista observável que notifica a interface gráfica automaticamente ao adicionar ou remover itens
+    ObservableCollection<Produto> lista = new ObservableCollection<Produto>();
 
     public ListaProduto()
     {
         InitializeComponent();
 
-        lst_produtos.ItemsSource = lista; //liga o 'lst_produtos' da tela XAML com a 'lista' do C# e remove direto da ObservableCollection
+        // Vincula a lista observável como fonte de dados do ListView
+        lst_produtos.ItemsSource = lista;
     }
 
-    protected override async void OnAppearing()
+    // Executado sempre que a página é exibida na tela
+    protected async override void OnAppearing()
     {
-        base.OnAppearing();
-
         try
         {
-            // Limpa a lista existente para não duplicar os itens ao voltar de outra tela
-            lista.Clear(); //Limpa a ObservableCollection para não duplicar itens na tela
+            lista.Clear();
 
-            List<Produto> tmp = await App.Db.GetAll(); // Busca todos os produtos gravados no SQLite
-            int numero = 1;
+            // Busca todos os produtos salvos no banco de dados
+            List<Produto> tmp = await App.Db.GetAll();
 
-            foreach (var item in tmp) // PASSO B: Adiciona item por item na ObservableCollection para exibir na tela
+            // Adiciona cada produto encontrado na lista observável
+            tmp.ForEach(i => lista.Add(i));
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlertAsync("Ops", ex.Message, "OK");
+        }
+    }
+
+    // Ação do botão "Adicionar" na barra de ferramentas (Toolbar)
+    private async void ToolbarItem_Clicked(object? sender, EventArgs e)
+    {
+        try
+        {
+            // Navega para a página de inclusão de novo produto
+            await Navigation.PushAsync(new Views.NovoProduto());
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlertAsync("Ops", ex.Message, "OK");
+        }
+    }
+
+    // Evento disparado a cada caractere digitado na barra de pesquisa
+    private async void txt_search_TextChanged(object? sender, TextChangedEventArgs e)
+    {
+        try
+        {
+            string q = e.NewTextValue;
+
+            lista.Clear();
+
+            // Realiza a busca filtrada no banco de dados
+            List<Produto> tmp = await App.Db.Search(q);
+
+            tmp.ForEach(i => lista.Add(i));
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlertAsync("Ops", ex.Message, "OK");
+        }
+    }
+
+    // Ação do botão "Somar" na barra de ferramentas
+    private async void ToolbarItem_Clicked_1(object? sender, EventArgs e)
+    {
+        try
+        {
+            // Calcula o total acumulado de todos os itens atualmente na lista
+            double soma = lista.Sum(i => i.Total);
+
+            string msg = $"O total é {soma:C}";
+
+            await DisplayAlertAsync("Total dos Produtos", msg, "OK");
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlertAsync("Ops", ex.Message, "OK");
+        }
+    }
+
+    // Ação do menu contextual "Remover" (ViewCell ContextActions)
+    private async void MenuItem_Clicked(object? sender, EventArgs e)
+    {
+        try
+        {
+            MenuItem? selecionado = sender as MenuItem;
+
+            if (selecionado == null)
+                return;
+
+            Produto? p = selecionado.BindingContext as Produto;
+
+            if (p == null)
+                return;
+
+            // Solicita confirmação do usuário antes de deletar
+            bool confirm = await DisplayAlertAsync(
+                "Tem Certeza?", $"Remover {p.Descricao}?", "Sim", "Não");
+
+            if (confirm)
             {
-                item.Numero = numero;
-                lista.Add(item);
-
-                numero++; //Inserido  instrução para iniciar com o nº1 e ir adicioando  de 1 em 1
+                await App.Db.Delete(p.Id);
+                lista.Remove(p);
             }
         }
         catch (Exception ex)
@@ -40,81 +118,31 @@ public partial class ListaProduto : ContentPage
         }
     }
 
-    private void ToolbarItem_Clicked(object sender, EventArgs e)
-    {
-        try
-        { //Comando para navegar do botão Adicionar para a tela NovoProduto
-            Navigation.PushAsync(new Views.NovoProduto());
-        }
-        catch (Exception ex)
-        {
-            DisplayAlertAsync("Ops", ex.Message, "Ok");
-        }
-    }
-
-    private async void MenuItem_Clicked(object sender, EventArgs e)
+    // Evento disparado ao tocar em um item da lista
+    private async void lst_produtos_ItemSelected(object? sender, SelectedItemChangedEventArgs e)
     {
         try
         {
-            var menuItem = sender as MenuItem;
-            var produto = menuItem?.BindingContext as Produto;
+            if (e.SelectedItem == null)
+                return;
 
-            if (produto != null)
+            Produto? p = e.SelectedItem as Produto;
+
+            if (p == null)
+                return;
+
+            // Limpa a seleção para permitir selecionar o mesmo item novamente
+            lst_produtos.SelectedItem = null;
+
+            // Abre a tela de edição passando o produto selecionado no BindingContext
+            await Navigation.PushAsync(new Views.EditarProduto
             {
-                bool confirm = await DisplayAlertAsync(
-                    "Confirmação",
-                    $"Deseja remover '{produto.Descricao}'?",
-                    "Sim",
-                    "Não");
-
-                if (confirm)
-                {
-                    // Exclui pelo ID verdadeiro do banco
-                    await App.Db.Delete(produto.ID);
-
-                    // Remove da tela direto da ObservableCollection
-                    lista.Remove(produto);
-
-                    // Reorganiza apenas a numeração visual
-                    int numero = 1;
-
-                    foreach (var item in lista)
-                    {
-                        item.Numero = numero;
-                        numero++;
-                    }
-
-                    await DisplayAlertAsync(
-                        "Sucesso",
-                        "Produto removido com sucesso!",
-                        "OK");
-                }
-            }
+                BindingContext = p
+            });
         }
         catch (Exception ex)
         {
-            await DisplayAlertAsync("Erro", ex.Message, "OK");
+            await DisplayAlertAsync("Ops", ex.Message, "OK");
         }
-    }
-
-    private async void txt_search_TextChanged(object sender, TextChangedEventArgs e)
-    {
-        string q = e.NewTextValue; 
-
-        lista.Clear(); //Limpa o que está aparecendo na tela atualmente
-
-        List<Produto> tmp = await App.Db.Search(q); // Busca no banco SQLite apenas o que combina com o texto digitado
-
-        tmp.ForEach (i => lista.Add(i)); // Alimenta a ObservableCollection com os itens filtrados
-    }
-
-    private void ToolbarItem_Clicked_1(object sender, EventArgs e)
-    { // se a lista estiver filtrada, ele soma apenas o que está filtrado)
-
-        double soma = lista.Sum(i => i.Total); // Usa o LINQ (.Sum) sobre a ObservableCollection 'lista'
-
-        string msg = $"O total é {soma:C}";
-
-        DisplayAlertAsync("Total dos Produtos", msg, "OK");
     }
 }

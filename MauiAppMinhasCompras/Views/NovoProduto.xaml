@@ -3,23 +3,25 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MauiAppMinhasCompras.Views.NovoProduto"
              Title="Novo Produto">
-    
+
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Salvar" Clicked="ToolbarItem_Clicked"/>
+        <!--"Botão Superior para Salvar um Item que foi adicionado"-->
+        <ToolbarItem Text="Salvar"
+                     Clicked="ToolbarItem_Clicked" />
     </ContentPage.ToolbarItems>
 
-    <!--Aqui fica as descrições da tabela-->
-    <VerticalStackLayout Spacing="10" Padding="10"> <!--Spacing separa em cima e embaixo. Padding nas laterais-->
-
-        <Label Text="Descrição do Produto:" /><!--Descrição da coluna-->
-        <Entry x:Name="txt_descricao"/> <!--Captura o que o usuário digitou-->      
+    <!--Layout Vertical para organizar os elementos de entrada de dados-->
+    <VerticalStackLayout Spacing="10"
+                         Padding="10">
+        <Label Text="Descrição do Produto:" />
+        <Entry x:Name="txt_descricao" />
 
         <Label Text="Quantidade:" />
-        <Entry x:Name="txt_quantidade" Keyboard="Numeric" />
+        <Entry x:Name="txt_quantidade"
+               Keyboard="Numeric" />
 
         <Label Text="Preço Unitário:" />
-        <Entry x:Name="txt_preco" Keyboard="Numeric" />
-        
-
+        <Entry x:Name="txt_preco"
+               Keyboard="Numeric" />
     </VerticalStackLayout>
 </ContentPage>

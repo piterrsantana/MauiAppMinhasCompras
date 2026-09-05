@@ -5,66 +5,59 @@
              Title="Minhas Compras">
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Somar" Clicked="ToolbarItem_Clicked_1"/>
+        <ToolbarItem Text="Somar"
+                     Clicked="ToolbarItem_Clicked_1" />
         <ToolbarItem Text="Adicionar"
                      Clicked="ToolbarItem_Clicked" />
     </ContentPage.ToolbarItems>
 
-    <!-- Troca do VerticalStackLayout pelo Grid -->
-    <Grid RowDefinitions="Auto, *" Margin="30" >
-
-        <SearchBar Grid.Row="0"
-                   x:Name="txt_search"
+    <VerticalStackLayout>
+        <SearchBar x:Name="txt_search"
                    Placeholder="Busca de Produtos"
-                   TextChanged="txt_search_TextChanged"/>
+                   TextChanged="txt_search_TextChanged" />
 
-        <ListView Grid.Row="1"
-                  x:Name="lst_produtos" >
+        <!-- NOTA: Optou-se pelo uso de ListView para garantir a compatibilidade comportamental em todas as plataformas, evitando divergências do CollectionView/SwipeView em plataformas específicas nesta versão.-->
 
+        <!--ItemSelected dispara um evento quando um item é selecionado ou clicado-->
+        <ListView x:Name="lst_produtos"
+                  ItemSelected="lst_produtos_ItemSelected">
             <ListView.Header>
                 <Grid ColumnDefinitions="*, *, *, *, *">
                     <Label Grid.Column="0"
-                           Text="Item Nº"
-                           FontAttributes="Bold" /> <!--Alterei o nome do campo para aparecer ao usuário o nº na lista em ordem, mas não altera o ID-->
+                           Text="ID" />
                     <Label Grid.Column="1"
-                           Text="Descrição"
-                           FontAttributes="Bold" />
+                           Text="Descrição" />
                     <Label Grid.Column="2"
-                           Text="Preço"
-                           FontAttributes="Bold" />
+                           Text="Preço" />
                     <Label Grid.Column="3"
-                           Text="Quantidade"
-                           FontAttributes="Bold" />
+                           Text="Qnt" />
                     <Label Grid.Column="4"
-                           Text="Total"
-                           FontAttributes="Bold" />
+                           Text="Total" />
                 </Grid>
             </ListView.Header>
-
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
                         <ViewCell.ContextActions>
-                            <MenuItem Text="Remover" 
-                                      Clicked="MenuItem_Clicked"
-                                      IsDestructive="True"/>
+                            <!--MenuItem ativado com o clique direito do mouse ou clique longo no item-->
+                            <MenuItem Text="Remover"
+                                      Clicked="MenuItem_Clicked" />
                         </ViewCell.ContextActions>
                         <Grid ColumnDefinitions="*, *, *, *, *">
                             <Label Grid.Column="0"
-                                   Text="{Binding Numero}" />
+                                   Text="{Binding Id}" />
                             <Label Grid.Column="1"
                                    Text="{Binding Descricao}" />
                             <Label Grid.Column="2"
-                                   Text="{Binding Preco, StringFormat='{0:C}'}" />
+                                   Text="{Binding Preco}" />
                             <Label Grid.Column="3"
                                    Text="{Binding Quantidade}" />
                             <Label Grid.Column="4"
-                                   Text="{Binding Total, StringFormat='{0:C}'}" />
+                                   Text="{Binding Total}" />
                         </Grid>
                     </ViewCell>
                 </DataTemplate>
             </ListView.ItemTemplate>
-
         </ListView>
-    </Grid>
+    </VerticalStackLayout>
 </ContentPage>
