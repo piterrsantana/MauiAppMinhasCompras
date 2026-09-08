@@ -13,6 +13,9 @@ namespace MauiAppMinhasCompras.Helpers
             _conn.CreateTableAsync<Produto>().Wait();
         }
 
+
+
+
         //Adicionar Novo Produto.
         public Task<int> Insert(Produto p)
         {
@@ -47,6 +50,13 @@ namespace MauiAppMinhasCompras.Helpers
             string sql = "SELECT * FROM Produto WHERE descricao LIKE '%" + q + "%'";
 
             return _conn.QueryAsync<Produto>(sql);
+        }
+
+        public async Task ZerarEAnularTabela()
+        {
+            // Apaga a tabela e recria zerada
+            await _conn.DropTableAsync<Produto>();
+            await _conn.CreateTableAsync<Produto>();
         }
     }
 }

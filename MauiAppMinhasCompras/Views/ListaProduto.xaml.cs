@@ -149,4 +149,24 @@ public partial class ListaProduto : ContentPage
             await DisplayAlertAsync("Ops", ex.Message, "OK");
         }
     }
+
+    private async void lst_produtos_Refreshing(object sender, EventArgs e)
+    {
+        try
+        {
+            lista.Clear();
+            List<Produto> tmp = await App.Db.GetAll();
+            tmp.ForEach(i => lista.Add(i));
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlertAsync("Ops", ex.Message, "OK");
+        }
+        finally
+        {
+            // Finaliza a animação de carregamento
+            lst_produtos.IsRefreshing = false;
+        }
+
+    }
 }
