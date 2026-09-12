@@ -35,13 +35,20 @@ namespace MauiAppMinhasCompras
         }
 
         // Sobrescreve o método CreateWindow para definir a página inicial do aplicativo
+        
         protected override Window CreateWindow(IActivationState? activationState)
         {
             // --- CÓDIGO TEMPORÁRIO PARA ZERAR O BANCO ---
             // Task.Run(async () => await Db.ZerarEAnularTabela());
             // ------------------------------------------
 
-            return new Window(new NavigationPage(new Views.ListaProduto()));
+            var window = new Window(new NavigationPage(new Views.ListaProduto()));
+
+            // Define a largura e altura iniciais da janela no Windows
+            window.Width = 550;
+            window.Height = 700;
+
+            return window;
         }
     }
 }
