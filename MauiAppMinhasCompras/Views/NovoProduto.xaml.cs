@@ -9,17 +9,13 @@ public partial class NovoProduto : ContentPage
         InitializeComponent();
     }
 
+    // Ação do botão de salvar na Toolbar
     private async void ToolbarItem_Clicked(object? sender, EventArgs e)
     {
+        // Validação dos campos de entrada.
         if (string.IsNullOrWhiteSpace(txt_descricao.Text))
         {
             await DisplayAlertAsync("Ops", "Informe a descrição do produto", "OK");
-            return;
-        }
-
-        if (pck_categoria.SelectedItem == null)
-        {
-            await DisplayAlertAsync("Ops", "Selecione a categoria do produto", "OK");
             return;
         }
 
@@ -35,18 +31,29 @@ public partial class NovoProduto : ContentPage
             return;
         }
 
+        // NOVO: Validação do Picker de Categoria
+        if (pck_categoria.SelectedItem == null)
+        {
+            await DisplayAlertAsync("Ops", "Selecione a categoria do produto", "OK");
+            return;
+        }
+
         try
         {
+            // Instanciação do modelo com os dados inseridos.
             Produto p = new Produto
             {
                 Descricao = txt_descricao.Text,
-                Categoria = pck_categoria.SelectedItem?.ToString() ?? string.Empty,
                 Quantidade = Convert.ToDouble(txt_quantidade.Text),
-                Preco = Convert.ToDouble(txt_preco.Text)
+                Preco = Convert.ToDouble(txt_preco.Text),
+                // NOVO: Atribuição da Categoria selecionada no Picker
+                Categoria = pck_categoria.SelectedItem.ToString()
             };
 
+            // Persistência no banco SQLite
             await App.Db.Insert(p);
 
+            // Feedback ao usuário e navegação de retorno
             await DisplayAlertAsync("Sucesso!", "Produto Adicionado", "OK");
             await Navigation.PopAsync();
         }

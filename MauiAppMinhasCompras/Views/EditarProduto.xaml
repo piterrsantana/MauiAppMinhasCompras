@@ -11,14 +11,16 @@
 
     <VerticalStackLayout Spacing="10"
                          Padding="10">
-        <Label Text="Descrição do Produto:" />
+        <Label Text="Descrição do Produto:"
+               TextColor="{StaticResource Primary}" />
         <Entry x:Name="txt_descricao"
                Placeholder="Digite a descrição do produto"
                Text="{Binding Descricao}" />
 
-        <Label Text="Categoria do Produto:" />
+        <Label Text="Categoria do Produto:"
+               TextColor="{StaticResource Primary}"/>
         <Picker x:Name="pck_categoria"
-                Title="Selecione a Categoria"
+                Title="Selecione a Categoria"                
                 SelectedItem="{Binding Categoria}">
             <Picker.ItemsSource>
                 <x:Array Type="{x:Type x:String}">
@@ -27,17 +29,20 @@
                     <x:String>Mercearia</x:String>
                     <x:String>Higiene</x:String>
                     <x:String>Limpeza</x:String>
+                    <x:String>Hortifruti</x:String>
                 </x:Array>
             </Picker.ItemsSource>
         </Picker>
 
-        <Label Text="Quantidade:" />
+        <Label Text="Quantidade:"
+               TextColor="{StaticResource Primary}" />
         <Entry x:Name="txt_quantidade"
                Placeholder="Digite a quantidade"
                Text="{Binding Quantidade, Mode=OneTime}"
                Keyboard="Numeric" />
 
-        <Label Text="Preço Unitário:" />
+        <Label Text="Preço Unitário:"
+               TextColor="{StaticResource Primary}" />
         <Entry x:Name="txt_preco"
                Placeholder="Digite o preço unitário"
                Text="{Binding Preco, Mode=OneTime}"

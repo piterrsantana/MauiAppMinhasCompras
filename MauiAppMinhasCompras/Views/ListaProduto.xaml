@@ -5,8 +5,8 @@
              Title="Minhas Compras">
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Relatório"
-                     Clicked="ToolbarItem_Relatorio_Clicked" />
+        <ToolbarItem Text="Relatorio"
+                     Clicked="ToolbarItem_Relatorio_Clicked"/>
         <ToolbarItem Text="Somar"
                      Clicked="ToolbarItem_Clicked_1" />
         <ToolbarItem Text="Adicionar"
@@ -15,25 +15,26 @@
 
     <ContentPage.Resources>
         <ResourceDictionary>
+            <!-- Alinha o texto no centro vertical de cada célula -->
             <Style TargetType="Label">
-                <Setter Property="VerticalTextAlignment"
-                        Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
             </Style>
         </ResourceDictionary>
     </ContentPage.Resources>
 
-    <StackLayout>
+    <StackLayout Padding="10, 5">
+
         <!-- Barra de pesquisa -->
-        <SearchBar x:Name="txt_search" 
-                   Placeholder="Busca de Produtos"
-                   Margin="10, 0, 10, 5"
+        <SearchBar x:Name="txt_search"
+                   Placeholder="Busca de Produtos" 
+                   Margin="0, 0, 0, 5"
                    TextChanged="txt_search_TextChanged" />
 
         <!-- Filtro por Categoria -->
         <Picker x:Name="pck_categoria"
                 Title="Filtrar por Categoria"
-                TitleColor="Gray" 
-                Margin="10, 0, 10, 5"
+                TitleColor="{StaticResource Primary}"
+                Margin="0, 0, 0, 10"
                 SelectedIndexChanged="pck_categoria_SelectedIndexChanged">
             <Picker.ItemsSource>
                 <x:Array Type="{x:Type x:String}">
@@ -47,36 +48,53 @@
             </Picker.ItemsSource>
         </Picker>
 
-        <!-- Lista de produtos -->
+        <!-- Tabela de Produtos -->
         <ListView x:Name="lst_produtos"
                   IsPullToRefreshEnabled="True"
                   Refreshing="lst_produtos_Refreshing"
-                  ItemSelected="lst_produtos_ItemSelected">
+                  ItemSelected="lst_produtos_ItemSelected"
+                  RowHeight="45">
+
+            <!-- Cabeçalho da Tabela -->
             <ListView.Header>
-                <Grid ColumnDefinitions="40, 150, 80, 50, 120, 90" 
-                      BackgroundColor="Black"
-                      Padding="20">
+                <Grid ColumnDefinitions="40, 2*, 90, 50, 1.5*, 100"
+                      Padding="10, 8"
+                      BackgroundColor="#2C2C2C">
                     <Label Grid.Column="0"
                            Text="ID"
-                           Padding="5"
-                           FontAttributes="Bold" />
+                           FontAttributes="Bold"
+                           TextColor="White"
+                           HorizontalOptions="Center" />
                     <Label Grid.Column="1"
                            Text="Descrição"
-                           FontAttributes="Bold" />
+                           FontAttributes="Bold"
+                           TextColor="White"
+                           HorizontalOptions="Start" />
                     <Label Grid.Column="2"
                            Text="Preço"
-                           FontAttributes="Bold" />
+                           FontAttributes="Bold"
+                           TextColor="White"
+                           HorizontalOptions="End" />
                     <Label Grid.Column="3"
                            Text="Qnt"
-                           FontAttributes="Bold" />
+                           FontAttributes="Bold"
+                           TextColor="White"
+                           HorizontalOptions="Center" />
                     <Label Grid.Column="4"
                            Text="Categoria"
-                           FontAttributes="Bold" />
+                           FontAttributes="Bold"
+                           TextColor="White"
+                           HorizontalOptions="Start"
+                           Margin="10,0,0,0" />
                     <Label Grid.Column="5"
                            Text="Total"
-                           FontAttributes="Bold" />
+                           FontAttributes="Bold"
+                           TextColor="White"
+                           HorizontalOptions="End" />
                 </Grid>
             </ListView.Header>
+
+            <!-- Linhas de Itens -->
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
@@ -84,27 +102,38 @@
                             <MenuItem Text="Remover"
                                       Clicked="MenuItem_Clicked" />
                         </ViewCell.ContextActions>
-                        <Grid ColumnDefinitions="40, 150, 80, 50, 120, 90"
-                              BackgroundColor="Black"
-                              Padding="10">
+
+                        <Grid ColumnDefinitions="40, 2*, 90, 50, 1.5*, 100"
+                              Padding="10, 0">
                             <Label Grid.Column="0"
                                    Text="{Binding Id}"
-                                   Padding="5" />
+                                   HorizontalOptions="Center"
+                                   TextColor="Gray" />
                             <Label Grid.Column="1"
-                                   Text="{Binding Descricao}" />
+                                   Text="{Binding Descricao}"
+                                   HorizontalOptions="Start"
+                                   LineBreakMode="TailTruncation" />
                             <Label Grid.Column="2"
-                                   Text="{Binding Preco, StringFormat='{0:C}'}" />
+                                   Text="{Binding Preco, StringFormat='{0:C}'}"
+                                   HorizontalOptions="End" />
                             <Label Grid.Column="3"
-                                   Text="{Binding Quantidade}" />
+                                   Text="{Binding Quantidade}"
+                                   HorizontalOptions="Center"
+                                   FontAttributes="Bold" />
                             <Label Grid.Column="4"
                                    Text="{Binding Categoria}"
-                                   FontAttributes="Bold" />
+                                   HorizontalOptions="Start"
+                                   Margin="10,0,0,0"
+                                   FontAttributes="Italic" />
                             <Label Grid.Column="5"
-                                   Text="{Binding Total, StringFormat='{0:C}'}" />
+                                   Text="{Binding Total, StringFormat='{0:C}'}"
+                                   HorizontalOptions="End"
+                                   FontAttributes="Bold" />
                         </Grid>
                     </ViewCell>
                 </DataTemplate>
             </ListView.ItemTemplate>
+
         </ListView>
     </StackLayout>
 </ContentPage>
