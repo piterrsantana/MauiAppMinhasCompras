@@ -9,13 +9,17 @@ public partial class NovoProduto : ContentPage
         InitializeComponent();
     }
 
-    // Ação do botão de salvar na Toolbar
     private async void ToolbarItem_Clicked(object? sender, EventArgs e)
     {
-        // Validação dos campos de entrada. Se houver algum campo vazio, exibe um alerta e retorna sem prosseguir.
         if (string.IsNullOrWhiteSpace(txt_descricao.Text))
         {
             await DisplayAlertAsync("Ops", "Informe a descrição do produto", "OK");
+            return;
+        }
+
+        if (pck_categoria.SelectedItem == null)
+        {
+            await DisplayAlertAsync("Ops", "Selecione a categoria do produto", "OK");
             return;
         }
 
@@ -33,19 +37,16 @@ public partial class NovoProduto : ContentPage
 
         try
         {
-            // Instanciação do modelo com os dados inseridos.
-            // Capturando a descrição, quantidade e preço do produto a partir dos campos de entrada.
             Produto p = new Produto
             {
                 Descricao = txt_descricao.Text,
+                Categoria = pck_categoria.SelectedItem?.ToString() ?? string.Empty,
                 Quantidade = Convert.ToDouble(txt_quantidade.Text),
                 Preco = Convert.ToDouble(txt_preco.Text)
             };
 
-            // Persistência no banco SQLite
             await App.Db.Insert(p);
 
-            // Feedback ao usuário e navegação de retorno
             await DisplayAlertAsync("Sucesso!", "Produto Adicionado", "OK");
             await Navigation.PopAsync();
         }

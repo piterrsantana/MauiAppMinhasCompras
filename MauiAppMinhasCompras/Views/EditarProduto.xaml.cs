@@ -11,9 +11,15 @@ public partial class EditarProduto : ContentPage
 
     private async void ToolbarItem_Clicked(object? sender, EventArgs e)
     {
-        if(string.IsNullOrWhiteSpace(txt_descricao.Text))
+        if (string.IsNullOrWhiteSpace(txt_descricao.Text))
         {
             await DisplayAlertAsync("Ops", "Informe a descrição do produto", "OK");
+            return;
+        }
+
+        if (pck_categoria.SelectedItem == null)
+        {
+            await DisplayAlertAsync("Ops", "Selecione a categoria do produto", "OK");
             return;
         }
 
@@ -28,28 +34,26 @@ public partial class EditarProduto : ContentPage
             await DisplayAlertAsync("Ops", "Informe o preço do produto", "OK");
             return;
         }
+
         try
         {
-            // Tenta obter o produto anexado ao BindingContext da página
             Produto? produto_anexado = BindingContext as Produto;
 
-            // Se o BindingContext não for um Produto, interrompe a execução com segurança
             if (produto_anexado == null)
             {
                 await DisplayAlertAsync("Ops", "Nenhum produto foi selecionado.", "OK");
                 return;
             }
 
-            // Cria o objeto atualizado com os dados informados nos campos de texto
             Produto p = new Produto
             {
                 Id = produto_anexado.Id,
-                Descricao = txt_descricao.Text ?? "", //O ?? garante que a descrição não seja nula
+                Descricao = txt_descricao.Text ?? string.Empty,
+                Categoria = pck_categoria.SelectedItem?.ToString() ?? string.Empty,
                 Quantidade = Convert.ToDouble(txt_quantidade.Text),
                 Preco = Convert.ToDouble(txt_preco.Text)
             };
 
-            // Atualiza o produto no banco de dados SQLite
             await App.Db.Update(p);
             await DisplayAlertAsync("Sucesso!", "Produto Atualizado", "OK");
             await Navigation.PopAsync();

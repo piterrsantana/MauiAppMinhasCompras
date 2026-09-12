@@ -5,6 +5,8 @@
              Title="Minhas Compras">
 
     <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Relatório"
+                     Clicked="ToolbarItem_Relatorio_Clicked" />
         <ToolbarItem Text="Somar"
                      Clicked="ToolbarItem_Clicked_1" />
         <ToolbarItem Text="Adicionar"
@@ -14,51 +16,91 @@
     <ContentPage.Resources>
         <ResourceDictionary>
             <Style TargetType="Label">
-                <Setter Property="VerticalTextAlignment" Value="Center" />
+                <Setter Property="VerticalTextAlignment"
+                        Value="Center" />
             </Style>
         </ResourceDictionary>
     </ContentPage.Resources>
-	
-    
-    <!-- Barra de pesquisa com Evento a disparar. Também uma dica para o usuário -->
+
     <StackLayout>
-        <SearchBar x:Name="txt_search"
-                   BackgroundColor="White"
+        <!-- Barra de pesquisa -->
+        <SearchBar x:Name="txt_search" 
                    Placeholder="Busca de Produtos"
-                   Margin="-5, 0, 0, 0"
-                   TextChanged="txt_search_TextChanged"/>
+                   Margin="10, 0, 10, 5"
+                   TextChanged="txt_search_TextChanged" />
 
-        <!-- NOTA: Optou-se pelo uso de ListView para garantir a compatibilidade comportamental em todas as plataformas, evitando divergências do CollectionView/SwipeView em plataformas específicas nesta versão.-->
+        <!-- Filtro por Categoria -->
+        <Picker x:Name="pck_categoria"
+                Title="Filtrar por Categoria"
+                TitleColor="Gray" 
+                Margin="10, 0, 10, 5"
+                SelectedIndexChanged="pck_categoria_SelectedIndexChanged">
+            <Picker.ItemsSource>
+                <x:Array Type="{x:Type x:String}">
+                    <x:String>Todas</x:String>
+                    <x:String>Açougue</x:String>
+                    <x:String>Padaria</x:String>
+                    <x:String>Mercearia</x:String>
+                    <x:String>Higiene</x:String>
+                    <x:String>Limpeza</x:String>
+                </x:Array>
+            </Picker.ItemsSource>
+        </Picker>
 
-        <!--ItemSelected dispara um evento quando um item é selecionado ou clicado-->
+        <!-- Lista de produtos -->
         <ListView x:Name="lst_produtos"
                   IsPullToRefreshEnabled="True"
                   Refreshing="lst_produtos_Refreshing"
                   ItemSelected="lst_produtos_ItemSelected">
-            <ListView.Header >
-                <Grid ColumnDefinitions="40, 100, 80, 50, 90"                      
-                      BackgroundColor= "White">
-                    <Label Grid.Column="0" Text="ID" Padding="5" FontAttributes="Bold" />
-                    <Label Grid.Column="1" Text="Descrição" FontAttributes="Bold" />
-                    <Label Grid.Column="2" Text="Preço" FontAttributes="Bold" />
-                    <Label Grid.Column="3" Text="Qnt" FontAttributes="Bold" />
-                    <Label Grid.Column="4" Text="Total" FontAttributes="Bold"/>
+            <ListView.Header>
+                <Grid ColumnDefinitions="40, 150, 80, 50, 120, 90" 
+                      BackgroundColor="Black"
+                      Padding="20">
+                    <Label Grid.Column="0"
+                           Text="ID"
+                           Padding="5"
+                           FontAttributes="Bold" />
+                    <Label Grid.Column="1"
+                           Text="Descrição"
+                           FontAttributes="Bold" />
+                    <Label Grid.Column="2"
+                           Text="Preço"
+                           FontAttributes="Bold" />
+                    <Label Grid.Column="3"
+                           Text="Qnt"
+                           FontAttributes="Bold" />
+                    <Label Grid.Column="4"
+                           Text="Categoria"
+                           FontAttributes="Bold" />
+                    <Label Grid.Column="5"
+                           Text="Total"
+                           FontAttributes="Bold" />
                 </Grid>
             </ListView.Header>
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
                         <ViewCell.ContextActions>
-                            <!--MenuItem ativado com o clique direito do mouse ou clique longo no item-->
                             <MenuItem Text="Remover"
                                       Clicked="MenuItem_Clicked" />
                         </ViewCell.ContextActions>
-                        <Grid ColumnDefinitions=" 40, 100, 80, 50, 90">
-                            <Label Grid.Column="0" Text="{Binding Id}" Padding="5"/>
-                            <Label Grid.Column="1" Text="{Binding Descricao}" />
-                            <Label Grid.Column="2" Text="{Binding Preco, StringFormat='{0:C}'}" />
-                            <Label Grid.Column="3" Text="{Binding Qnt}" />
-                            <Label Grid.Column="4" Text="{Binding Total, StringFormat='{0:C}'}" />
+                        <Grid ColumnDefinitions="40, 150, 80, 50, 120, 90"
+                              BackgroundColor="Black"
+                              Padding="10">
+                            <Label Grid.Column="0"
+                                   Text="{Binding Id}"
+                                   Padding="5" />
+                            <Label Grid.Column="1"
+                                   Text="{Binding Descricao}" />
+                            <Label Grid.Column="2"
+                                   Text="{Binding Preco, StringFormat='{0:C}'}" />
+                            <Label Grid.Column="3"
+                                   Text="{Binding Quantidade}" />
+                            <Label Grid.Column="4"
+                                   Text="{Binding Categoria}"
+                                   FontAttributes="Bold" />
+                            <Label Grid.Column="5"
+                                   Text="{Binding Total, StringFormat='{0:C}'}" />
                         </Grid>
                     </ViewCell>
                 </DataTemplate>

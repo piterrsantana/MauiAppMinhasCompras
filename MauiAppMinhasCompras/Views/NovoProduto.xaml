@@ -5,16 +5,28 @@
              Title="Novo Produto">
 
     <ContentPage.ToolbarItems>
-        <!--"Botão Superior para Salvar um Item que foi adicionado"-->
         <ToolbarItem Text="Salvar"
                      Clicked="ToolbarItem_Clicked" />
     </ContentPage.ToolbarItems>
 
-    <!--Layout Vertical para organizar os elementos de entrada de dados-->
     <VerticalStackLayout Spacing="10"
                          Padding="10">
         <Label Text="Descrição do Produto:" />
         <Entry x:Name="txt_descricao" />
+
+        <Label Text="Categoria do Produto:" />
+        <Picker x:Name="pck_categoria"
+                Title="Selecione a Categoria">
+            <Picker.ItemsSource>
+                <x:Array Type="{x:Type x:String}">
+                    <x:String>Açougue</x:String>
+                    <x:String>Padaria</x:String>
+                    <x:String>Mercearia</x:String>
+                    <x:String>Higiene</x:String>
+                    <x:String>Limpeza</x:String>
+                </x:Array>
+            </Picker.ItemsSource>
+        </Picker>
 
         <Label Text="Quantidade:" />
         <Entry x:Name="txt_quantidade"
@@ -23,8 +35,5 @@
         <Label Text="Preço Unitário:" />
         <Entry x:Name="txt_preco"
                Keyboard="Numeric" />
-
-        <Label Text="Classe do Produto:" />
-        <Entry x:Name="txt_classe" />
     </VerticalStackLayout>
 </ContentPage>

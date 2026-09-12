@@ -5,30 +5,19 @@ namespace MauiAppMinhasCompras.Views;
 
 public partial class ListaProduto : ContentPage
 {
-    // Lista observável que notifica a interface gráfica automaticamente ao adicionar ou remover itens
     ObservableCollection<Produto> lista = new ObservableCollection<Produto>();
 
     public ListaProduto()
     {
         InitializeComponent();
-
-        // Vincula a lista observável como fonte de dados do ListView
         lst_produtos.ItemsSource = lista;
     }
 
-    // Executado sempre que a página é exibida na tela
     protected async override void OnAppearing()
     {
         try
         {
-            // Limpa a lista observável antes de recarregar os dados
-            lista.Clear();
-
-            // Busca todos os produtos salvos no banco de dados
-            List<Produto> tmp = await App.Db.GetAll();
-
-            // Adiciona cada produto encontrado na lista observável
-            tmp.ForEach(i => lista.Add(i));
+            await CarregarProdutos();
         }
         catch (Exception ex)
         {
@@ -36,12 +25,77 @@ public partial class ListaProduto : ContentPage
         }
     }
 
-    // Ação do botão "Adicionar" na barra de ferramentas (Toolbar)
+    // Método centralizado para carregar os produtos aplicando filtros de Categoria e Busca
+    private async Task CarregarProdutos()
+    {
+        try
+        {
+            lista.Clear();
+
+            string? categoriaSelecionada = pck_categoria?.SelectedItem?.ToString();
+            string termoBusca = txt_search?.Text ?? string.Empty;
+
+            List<Produto> tmp;
+
+            if (!string.IsNullOrWhiteSpace(termoBusca))
+            {
+                tmp = await App.Db.Search(termoBusca);
+            }
+            else
+            {
+                tmp = await App.Db.GetAll();
+            }
+
+            if (!string.IsNullOrEmpty(categoriaSelecionada) && categoriaSelecionada != "Todas")
+            {
+                tmp = tmp.Where(p => p.Categoria == categoriaSelecionada).ToList();
+            }
+
+            if (tmp != null)
+            {
+                foreach (var item in tmp)
+                {
+                    lista.Add(item);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlertAsync("Ops", ex.Message, "OK");
+        }
+    }
+
+    private async void pck_categoria_SelectedIndexChanged(object? sender, EventArgs e)
+    {
+        await CarregarProdutos();
+    }
+
+    private async void txt_search_TextChanged(object? sender, TextChangedEventArgs e)
+    {
+        await CarregarProdutos();
+    }
+
+    private async void lst_produtos_Refreshing(object? sender, EventArgs e)
+    {
+        try
+        {
+            if (txt_search != null)
+            {
+                txt_search.Text = string.Empty;
+            }
+
+            await CarregarProdutos();
+        }
+        finally
+        {
+            lst_produtos.IsRefreshing = false;
+        }
+    }
+
     private async void ToolbarItem_Clicked(object? sender, EventArgs e)
     {
         try
         {
-            // Navega para a página de inclusão de novo produto
             await Navigation.PushAsync(new Views.NovoProduto());
         }
         catch (Exception ex)
@@ -50,35 +104,12 @@ public partial class ListaProduto : ContentPage
         }
     }
 
-    // Evento disparado a cada caractere digitado na barra de pesquisa
-    private async void txt_search_TextChanged(object? sender, TextChangedEventArgs e)
-    {
-        try
-        {   // Obtém o texto digitado na barra de pesquisa
-            string q = e.NewTextValue;
-            // Limpa a lista observável antes de exibir os resultados da busca
-            lista.Clear();
-
-            // Realiza a busca filtrada no banco de dados
-            List<Produto> tmp = await App.Db.Search(q);
-            // Adiciona cada produto encontrado na lista observável
-            tmp.ForEach(i => lista.Add(i));
-        }
-        catch (Exception ex)
-        {
-            await DisplayAlertAsync("Ops", ex.Message, "OK");
-        }
-    }
-
-    // Ação do botão "Somar" na barra de ferramentas
     private async void ToolbarItem_Clicked_1(object? sender, EventArgs e)
     {
         try
         {
-            // Calcula o total acumulado de todos os itens atualmente na lista
             double soma = lista.Sum(i => i.Total);
-
-            string msg = $"O total é {soma:C}";
+            string msg = $"O total dos produtos filtrados é {soma:C}";
 
             await DisplayAlertAsync("Total dos Produtos", msg, "OK");
         }
@@ -88,27 +119,29 @@ public partial class ListaProduto : ContentPage
         }
     }
 
-    // Ação do menu contextual "Remover" (ViewCell ContextActions)
+    private async void ToolbarItem_Relatorio_Clicked(object? sender, EventArgs e)
+    {
+        try
+        {
+            await Navigation.PushAsync(new Views.RelatorioPage());
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlertAsync("Ops", ex.Message, "OK");
+        }
+    }
+
     private async void MenuItem_Clicked(object? sender, EventArgs e)
     {
         try
-        {   // Obtém o item de menu que foi clicado. É declarado nulo para evitar erros caso o sender não seja do tipo MenuItem.
+        {
             MenuItem? selecionado = sender as MenuItem;
+            if (selecionado == null) return;
 
-            // Verifica se o item de menu é nulo. Se for, retorna imediatamente para a tela de lista.
-            if (selecionado == null)
-                return;
-
-            //Busca o produto associado ao que foi clicado, com o BindingContext/MenuItem.
-            //Se não tem produto associado, retorna para a tela de lista.
             Produto? p = selecionado.BindingContext as Produto;
-             
-            if (p == null)
-                return;
+            if (p == null) return;
 
-            // Solicita confirmação do usuário antes de deletar
-            bool confirm = await DisplayAlertAsync(
-                "Tem Certeza?", $"Remover {p.Descricao}?", "Sim", "Não");
+            bool confirm = await DisplayAlertAsync("Tem Certeza?", $"Remover {p.Descricao}?", "Sim", "Não");
 
             if (confirm)
             {
@@ -122,23 +155,17 @@ public partial class ListaProduto : ContentPage
         }
     }
 
-    // Evento disparado ao tocar em um item da lista
     private async void lst_produtos_ItemSelected(object? sender, SelectedItemChangedEventArgs e)
     {
         try
-        {   
-            if (e.SelectedItem == null)
-                return;
-            // Obtém o produto selecionado na lista
-            Produto? p = e.SelectedItem as Produto;
-                        
-            if (p == null)
-                return;
+        {
+            if (e.SelectedItem == null) return;
 
-            // Limpa a seleção para permitir selecionar o mesmo item novamente
+            Produto? p = e.SelectedItem as Produto;
+            if (p == null) return;
+
             lst_produtos.SelectedItem = null;
 
-            // Abre a tela de edição passando o produto selecionado no BindingContext
             await Navigation.PushAsync(new Views.EditarProduto
             {
                 BindingContext = p
@@ -148,25 +175,5 @@ public partial class ListaProduto : ContentPage
         {
             await DisplayAlertAsync("Ops", ex.Message, "OK");
         }
-    }
-
-    private async void lst_produtos_Refreshing(object sender, EventArgs e)
-    {
-        try
-        {
-            lista.Clear();
-            List<Produto> tmp = await App.Db.GetAll();
-            tmp.ForEach(i => lista.Add(i));
-        }
-        catch (Exception ex)
-        {
-            await DisplayAlertAsync("Ops", ex.Message, "OK");
-        }
-        finally
-        {
-            // Finaliza a animação de carregamento
-            lst_produtos.IsRefreshing = false;
-        }
-
     }
 }

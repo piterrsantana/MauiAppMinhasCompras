@@ -5,7 +5,6 @@
              Title="{Binding Descricao}">
 
     <ContentPage.ToolbarItems>
-        <!-- Adiciona um botão de salvar a atualização na tela -->
         <ToolbarItem Text="Salvar"
                      Clicked="ToolbarItem_Clicked" />
     </ContentPage.ToolbarItems>
@@ -13,20 +12,32 @@
     <VerticalStackLayout Spacing="10"
                          Padding="10">
         <Label Text="Descrição do Produto:" />
-        <!--Definição de entrada para a descrição do produto-->
         <Entry x:Name="txt_descricao"
                Placeholder="Digite a descrição do produto"
                Text="{Binding Descricao}" />
 
+        <Label Text="Categoria do Produto:" />
+        <Picker x:Name="pck_categoria"
+                Title="Selecione a Categoria"
+                SelectedItem="{Binding Categoria}">
+            <Picker.ItemsSource>
+                <x:Array Type="{x:Type x:String}">
+                    <x:String>Açougue</x:String>
+                    <x:String>Padaria</x:String>
+                    <x:String>Mercearia</x:String>
+                    <x:String>Higiene</x:String>
+                    <x:String>Limpeza</x:String>
+                </x:Array>
+            </Picker.ItemsSource>
+        </Picker>
+
         <Label Text="Quantidade:" />
-        <!--Definição de entrada para a quantidade do produto-->
         <Entry x:Name="txt_quantidade"
                Placeholder="Digite a quantidade"
                Text="{Binding Quantidade, Mode=OneTime}"
                Keyboard="Numeric" />
 
         <Label Text="Preço Unitário:" />
-        <!--Definição de entrada para o preço unitário do produto-->
         <Entry x:Name="txt_preco"
                Placeholder="Digite o preço unitário"
                Text="{Binding Preco, Mode=OneTime}"

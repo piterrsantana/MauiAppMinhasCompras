@@ -4,36 +4,35 @@ namespace MauiAppMinhasCompras.Models
 {
     public class Produto
     {
-
-        //Variaveis privadas para validação
+        // Variáveis privadas para validação
         string _descricao = string.Empty;
         double _quantidade;
         double _preco;
+        string _categoria = string.Empty;
 
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
+
         public string Descricao
         {
-            get;
+            get => _descricao;
             set
             {
-                //Validação para não permitir que a descrição seja vazia
-                if (value == null)
+                if (string.IsNullOrWhiteSpace(value))
                 {
-                    //Lançando uma exceção caso a descrição seja vazia
                     throw new Exception("Por favor, preencha a descrição");
                 }
-                //Atribuindo o valor à variável privada
-                field = value;
+
+                _descricao = value;
             }
-        } = string.Empty;
+        }
 
         public double Quantidade
         {
             get => _quantidade;
             set
             {
-                if (value < 0)
+                if (value <= 0)
                 {
                     throw new Exception("Por favor, preencha uma quantidade válida");
                 }
@@ -55,6 +54,22 @@ namespace MauiAppMinhasCompras.Models
                 _preco = value;
             }
         }
+
+        // Propriedade Categoria adicionada para o Desafio 1
+        public string Categoria
+        {
+            get => _categoria;
+            set
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    throw new Exception("Por favor, selecione uma categoria para o produto");
+                }
+
+                _categoria = value;
+            }
+        }
+
         public double Total { get => Quantidade * Preco; }
     }
 }
