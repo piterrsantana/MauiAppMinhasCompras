@@ -1,4 +1,6 @@
-﻿namespace MauiAppMinhasCompras.Models
+﻿//Aqui está a classe pública que representa um relatório de gastos por categoria com as propriedades necessárias.
+
+namespace MauiAppMinhasCompras.Models
 {
     public class RelatorioCategoria
     {

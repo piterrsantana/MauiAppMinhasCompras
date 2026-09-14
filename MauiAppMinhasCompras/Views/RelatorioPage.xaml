@@ -3,6 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MauiAppMinhasCompras.Views.RelatorioPage"
              Title="Relatório por Categoria">
+    <!--O objetivo dessa página é exibir um relatório de gastos por categoria, agrupando os
+//produtos cadastrados no aplicativo e calculando o total gasto em cada categoria.-->
 
     <ScrollView Padding="15">
         <VerticalStackLayout Spacing="15">

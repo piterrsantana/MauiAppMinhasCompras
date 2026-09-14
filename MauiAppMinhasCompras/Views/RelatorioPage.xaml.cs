@@ -1,3 +1,5 @@
+
+/*Essa pagina tem o objetivo de exibir um relatório de gastos por categoria.*/
 using MauiAppMinhasCompras.Models;
 
 namespace MauiAppMinhasCompras.Views;
