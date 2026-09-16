@@ -57,8 +57,8 @@
 
             <!-- Cabeçalho da Tabela -->
             <ListView.Header>
-                <Grid ColumnDefinitions="40, 2*, 90, 50, 1.5*, 100"
-                      Padding="10, 8"
+                <Grid ColumnDefinitions="* , 73, *, *, 73, *"
+                      
                       BackgroundColor="#2C2C2C">
                     <Label Grid.Column="0"
                            Text="ID"
@@ -103,11 +103,11 @@
                                       Clicked="MenuItem_Clicked" />
                         </ViewCell.ContextActions>
 
-                        <Grid ColumnDefinitions="40, 2*, 90, 50, 1.5*, 100"
+                        <Grid ColumnDefinitions=" *, 73, *, *, 73, *"
                               Padding="10, 0">
                             <Label Grid.Column="0"
                                    Text="{Binding Id}"
-                                   HorizontalOptions="Center"
+                                   HorizontalOptions="Start"
                                    TextColor="Gray" />
                             <Label Grid.Column="1"
                                    Text="{Binding Descricao}"
@@ -115,19 +115,18 @@
                                    LineBreakMode="TailTruncation" />
                             <Label Grid.Column="2"
                                    Text="{Binding Preco, StringFormat='{0:C}'}"
-                                   HorizontalOptions="End" />
+                                   HorizontalOptions="Start" />
                             <Label Grid.Column="3"
                                    Text="{Binding Quantidade}"
                                    HorizontalOptions="Center"
                                    FontAttributes="Bold" />
                             <Label Grid.Column="4"
                                    Text="{Binding Categoria}"
-                                   HorizontalOptions="Start"
-                                   Margin="10,0,0,0"
+                                   HorizontalOptions="Start"                                   
                                    FontAttributes="Italic" />
                             <Label Grid.Column="5"
                                    Text="{Binding Total, StringFormat='{0:C}'}"
-                                   HorizontalOptions="End"
+                                   HorizontalOptions="Start"
                                    FontAttributes="Bold" />
                         </Grid>
                     </ViewCell>
